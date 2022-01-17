@@ -12,6 +12,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -29,10 +31,21 @@ public class ApplicationContextSameBeanFindTest {
     @Test
     @DisplayName("타입으로 조회 시 같은 타입이 둘 이상 있으면, 빈 이름을 지정하면 된다.")
     void findBeanByName() {
-        MemberRepository memberRepository = ac.getBean("memberRepository1",MemberRepository.class);
+
+        MemberRepository memberRepository = ac.getBean("memberRepository1", MemberRepository.class);
         assertThat(memberRepository).isInstanceOf(MemberRepository.class);
     }
 
+    @Test
+    @DisplayName("특정 반환 타입 Bean 모두 조회하기")
+    void findAllBeanByType() {
+        Map<String, MemberRepository> beansOfType = ac.getBeansOfType(MemberRepository.class);
+        for (String key : beansOfType.keySet()) { // keySet(): map의 모든 키 값을 가져온다
+            System.out.println("key = " + key + "/ value = " + beansOfType.get(key));
+        }
+        System.out.println("beansOfType = " + beansOfType);
+        assertThat(beansOfType.size()).isEqualTo(2);
+    }
 
     @Configuration
     // class 내에 class를 만드는 경우는 scope을 상위 class로 한정한다는 것을 의미한다.
