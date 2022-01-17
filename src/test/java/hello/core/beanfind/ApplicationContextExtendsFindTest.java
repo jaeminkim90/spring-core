@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,6 +40,27 @@ public class ApplicationContextExtendsFindTest {
     void findBeanBySubType() {
         RateDiscountPolicy bean = ac.getBean(RateDiscountPolicy.class); // 부모가 아닌 특정 자식 타입으로 조회
         assertThat(bean).isInstanceOf(RateDiscountPolicy.class); // 인스턴스 타입 증명
+    }
+
+    @Test
+    @DisplayName("부모 타입으로 모두 조회하기")
+    void findAllBeansByParentType() {
+        Map<String, DiscountPolicy> beansOfType = ac.getBeansOfType(DiscountPolicy.class);
+        assertThat(beansOfType.size()).isEqualTo(2);
+        for (String key : beansOfType.keySet()) {
+            System.out.println("key = " + key + " / value = " + beansOfType.get(key));
+        }
+    }
+
+    @Test
+    @DisplayName(" Object 타입으로 모두 조회하기")
+    void findAllBeansByObjectType() {
+        Map<String, Object> beansOfType = ac.getBeansOfType(Object.class);
+        // Object는 모든 자바 객체의 부모 클래스이므로, 스프링 내부에서 사용하는 Bean까지 모두 담긴다.
+
+        for (String key : beansOfType.keySet()) {
+            System.out.println("key = " + key + " / value = " + beansOfType.get(key));
+        }
     }
 
 
