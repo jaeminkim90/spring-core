@@ -10,7 +10,6 @@ public class MemberServiceImpl implements MemberService{
 
     @Autowired // 마치 ac.getBean(MemberRepository.class)와 같이 해당 타입으로 조회되는 Bean을 찾아서 등록한다.
     public MemberServiceImpl(MemberRepository memberRepository) {
-
         this.memberRepository = memberRepository;
     }
 
