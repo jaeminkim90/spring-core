@@ -25,7 +25,10 @@ public class OrderServiceImpl implements OrderService {
         // 단일 책임 원칙을 잘 지킨 경우라고 할 수 있다.
 
         return new Order(memberId, itemName, itemPrice, discountPrice);
+    }
 
-
+    // AppConfig에서 2번 생성된 MemberRepository 객체의 동일 여부 확인을 위해 임시로 만든 메서드
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
     }
 }

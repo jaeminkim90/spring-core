@@ -25,10 +25,9 @@ class StatefulServiceTest {
 
         // ThreadA: 사용자 A 주문 금액 조회
         int price = statefulService1.getPrice();
-
         System.out.println("price = " + price); // 20000원이 나온다. B 사용자로 인해 상태값 변경
 
-        Assertions.assertThat(statefulService1.getPrice()).isEqualTo(20000);
+        Assertions.assertThat(statefulService1.getPrice()).isEqualTo(statefulService2.getPrice());
     }
 
     static class TestConfig {
@@ -37,7 +36,5 @@ class StatefulServiceTest {
         public StatefulService statefulService () {
             return new StatefulService();
         }
-
     }
-
 }
