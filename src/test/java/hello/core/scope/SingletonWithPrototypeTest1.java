@@ -3,6 +3,7 @@ package hello.core.scope;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -44,14 +45,12 @@ public class SingletonWithPrototypeTest1 {
     @Scope("singleton")
     // @RequiredArgsConstructor: 생성자를 자동으로 만들어 준다.
     static class ClientBean {
-        private final PrototypeBean prototypeBean; // 생성 시점에 주입된다.
 
-        @Autowired // 생성자가 한 개일 때는 생략 가능
-        public ClientBean(PrototypeBean prototypeBean) {
-            this.prototypeBean = prototypeBean;
-        }
+        @Autowired
+        private ObjectProvider<PrototypeBean> prototypeBeanProvider;
 
         public int logic() {
+            PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
             prototypeBean.addCount();
             return prototypeBean.getCount();
         }
