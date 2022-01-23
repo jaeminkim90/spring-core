@@ -14,17 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 public class LogDemoController {
 
     private final LogDemoService logDemoService;
-    private final ObjectProvider<MyLogger> myLoggerProvider;
+    private final MyLogger myLogger;
 
     @RequestMapping("log-demo")
     @ResponseBody
-    public String logDemo(HttpServletRequest request) {
-        MyLogger myLogger = myLoggerProvider.getObject(); // myLogger를 받는다
-
+    public String logDemo(HttpServletRequest request) throws InterruptedException {
         String requestURL = request.getRequestURI().toString();
         myLogger.setRequestURL(requestURL);
 
         myLogger.log("controller test");
+        Thread.sleep(3000);
         logDemoService.logic("testId");
         return  "OK";
     }
