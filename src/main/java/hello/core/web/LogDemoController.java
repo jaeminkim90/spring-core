@@ -3,6 +3,8 @@ package hello.core.web;
 import hello.core.common.MyLogger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,15 +17,24 @@ public class LogDemoController {
 
     private final LogDemoService logDemoService;
     private final MyLogger myLogger;
+    private static ApplicationContext ac;
+
 
     @RequestMapping("log-demo")
     @ResponseBody
-    public String logDemo(HttpServletRequest request) throws InterruptedException {
+    public String logDemo(HttpServletRequest request)  {
         String requestURL = request.getRequestURI().toString();
-        myLogger.setRequestURL(requestURL);
 
-        myLogger.log("controller test");
-        Thread.sleep(3000);
+        // 프록시가 적용된 myLogger 클래스 정보 확인
+        System.out.println("myLogger.getClass() = " + myLogger.getClass());
+        ApplicationContext ac = new AnnotationConfigApplicationContext(MyLogger.class);
+
+        // getBean()으로 프록시가 적용된 myLogger 클래스 정보 확인
+        MyLogger myLogger = ac.getBean("myLogger", MyLogger.class);
+        System.out.println("ac.getBean(myLogger) = " + myLogger.getClass());
+
+        this.myLogger.setRequestURL(requestURL);
+        this.myLogger.log("controller test");
         logDemoService.logic("testId");
         return  "OK";
     }
